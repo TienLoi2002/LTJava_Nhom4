@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="_layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create product</title>
+</head>
+<body>
+<th:block th:replace="_layout"></th:block>
+<div class="container body-content" layout:fragment="content">
+    <form class="form" method="post" th:action="@{/products/create}" th:object="${product}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" id="name" placeholder="Product Name" th:field="*{name}" type="text">
+            <div class="alert alert-warning" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+        </div>
+        <div class="form-group">
+            <label for="image">Image:</label>
+            <input class="form-control" type = "file" id="image" name="imageProduct" accept="image/png, image/jpeg, image/jpg">
+            <div class="alert alert-warning" th:errors="*{image}" th:if="${#fields.hasErrors('image')}"></div>
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input class="form-control" id="price" placeholder="price" th:field="*{price}" type="number">
+            <div class="alert alert-warning" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></div>
+        </div>
+        <input class="btn btn-success" type="submit" value="Add Product">
+    </form>
+</div>
+</body>
+</html>

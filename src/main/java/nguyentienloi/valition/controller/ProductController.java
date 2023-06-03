@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import nguyentienloi.valition.models.Product;
 import nguyentienloi.valition.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
-
-
-
+import static java.io.File.separator;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.UUID.randomUUID;
 
 
 @Controller
@@ -39,6 +37,9 @@ public class ProductController {
         return "products/create";
     }
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     @PostMapping("/create")
     public String create(@Valid Product newProduct, @RequestParam MultipartFile imageProduct, BindingResult result,
                          Model model) {
@@ -50,9 +51,9 @@ public class ProductController {
         if (imageProduct != null && imageProduct.getSize() > 0) {
             try {
                 File saveFile = new ClassPathResource("static/images").getFile();
-                String newImageFile = UUID.randomUUID() + ".png";
-                java.nio.file.Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + newImageFile);
-                Files.copy(imageProduct.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                String newImageFile = randomUUID() + ".png";
+                java.nio.file.Path path = Paths.get(saveFile.getAbsolutePath() + separator + newImageFile);
+                Files.copy(imageProduct.getInputStream(), path, REPLACE_EXISTING);
                 newProduct.setImage(newImageFile);
             } catch (Exception e) {
                 e.printStackTrace();
